@@ -27,7 +27,9 @@ define("p3/widget/DataItemFormatter", [
 
   function evaluateLink(link, value, item) {
     return (link && value !== '-' && value !== '0') ? (
-      (typeof (link) == 'function') ? link.apply(this, [item]) : '<a href="' + link + value + '" target="_blank">' + value + '</a>'
+      (typeof (link) == 'function') ?
+        link.apply(this, [item]) :
+        '<a href="' + link + value + '" target="_blank">' + String(value).split(',').join(', ') + '</a>'
     ) : value;
   }
 
@@ -441,7 +443,7 @@ define("p3/widget/DataItemFormatter", [
     feature_data: function (item, options) {
       options = options || {};
 
-      var sectionList = ['Summary', 'Identifiers', 'Genome', 'Location', 'Sequences'];
+      var sectionList = ['Summary', 'Identifiers', 'Genome', 'Location', 'Sequences', 'Other'];
       var section = {};
 
       section.Summary = [{
@@ -558,6 +560,16 @@ define("p3/widget/DataItemFormatter", [
         link: function (obj) {
           return '<button onclick="window.open(\'/view/FASTA/protein/?in(feature_id,(' + obj.feature_id + '))\')">view</button>';
         }
+      }];
+
+      section.Other = [{
+        name: 'Insert Date',
+        text: 'date_inserted',
+        type: 'date'
+      }, {
+        name: 'Last Modified',
+        text: 'date_modified',
+        type: 'date'
       }];
 
       var label = (item.patric_id) ? item.patric_id : (item.refseq_locus_tag) ? item.refseq_locus_tag : (item.protein_id) ? item.protein_id : item.feature_id;
@@ -1521,6 +1533,11 @@ define("p3/widget/DataItemFormatter", [
           text: 'genome_name',
           mini: true
         }, {
+          name: 'Other Names',
+          text: 'other_names',
+          mini: true,
+          editable: true
+        }, {
           name: 'NCBI Taxon ID',
           text: 'taxon_id',
           link: 'http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id='
@@ -1586,14 +1603,6 @@ define("p3/widget/DataItemFormatter", [
           name: 'Type Strain',
           text: 'type_strain',
           editable: true
-        }, {
-          name: 'Antimicrobial Resistance',
-          text: 'antimicrobial_resistance',
-          link: function (obj) {
-            return lang.replace('<a href="/view/Genome/{obj.genome_id}#view_tab=amr">AMR Phenotypes</a>', { obj: obj });
-          },
-          editable: true,
-          isList: false // not displayed as list although returned as list
         }, {
           name: 'Reference Genome',
           text: 'reference_genome'
@@ -1683,18 +1692,9 @@ define("p3/widget/DataItemFormatter", [
           text: 'genbank_accessions',
           link: 'http://www.ncbi.nlm.nih.gov/nuccore/',
           editable: true
-        }, {
-          name: 'RefSeq Accessions',
-          text: 'refseq_accessions',
-          link: 'http://www.ncbi.nlm.nih.gov/nuccore/',
-          editable: true
         }],
 
         'Sequence Info': [{
-          name: 'Sequencing Status',
-          text: 'sequencing_status',
-          editable: true
-        }, {
           name: 'Sequencing Platform',
           text: 'sequencing_platform',
           editable: true
@@ -1724,22 +1724,9 @@ define("p3/widget/DataItemFormatter", [
         }, {
           name: 'GC Content',
           text: 'gc_content'
-        }, {
-          name: 'PATRIC CDS',
-          text: 'patric_cds',
-          link: function (obj) {
-            return lang.replace('<a href="/view/Genome/{obj.genome_id}#view_tab=features&filter=and(eq(feature_type,CDS),eq(annotation,PATRIC))">{obj.patric_cds}</a>', { obj: obj });
-          }
-        }, {
-          name: 'RefSeq CDS',
-          text: 'refseq_cds'
         }],
 
         'Isolate Info': [{
-          name: 'Isolation Site',
-          text: 'isolation_site',
-          editable: true
-        }, {
           name: 'Isolation Source',
           text: 'isolation_source',
           editable: true,
@@ -1759,28 +1746,16 @@ define("p3/widget/DataItemFormatter", [
           editable: true,
           type: 'date'
         }, {
+          name: 'Season',
+          text: 'season',
+          editable: true
+        }, {
           name: 'Isolation Country',
           text: 'isolation_country',
           editable: true
         }, {
           name: 'Geographic Location',
           text: 'geographic_location',
-          editable: true
-        }, {
-          name: 'Latitude',
-          text: 'latitude',
-          editable: true
-        }, {
-          name: 'Longitude',
-          text: 'longitude',
-          editable: true
-        }, {
-          name: 'Altitude',
-          text: 'altitude',
-          editable: true
-        }, {
-          name: 'Depth',
-          text: 'depth',
           editable: true
         }, {
           name: 'Other Environmental',
@@ -1794,6 +1769,10 @@ define("p3/widget/DataItemFormatter", [
           text: 'host_name',
           editable: true
         }, {
+          name: 'Host Common Name',
+          text: 'host_common_name',
+          editable: true
+        }, {
           name: 'Host Gender',
           text: 'host_gender',
           editable: true
@@ -1804,14 +1783,6 @@ define("p3/widget/DataItemFormatter", [
         }, {
           name: 'Host Health',
           text: 'host_health',
-          editable: true
-        }, {
-          name: 'Body Sample Site',
-          text: 'body_sample_site',
-          editable: true
-        }, {
-          name: 'Body Sample Subsite',
-          text: 'body_sample_subsite',
           editable: true
         }, {
           name: 'Other Clinical',
