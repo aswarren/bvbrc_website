@@ -954,6 +954,7 @@ define([
   return declare([WidgetBase], {
     state: null,
     jbrowseConfig: null,
+    defaultTracks: null,
     style: 'border: 1px solid #ddd;',
     onSetState: function (attr, oldVal, state) {
       console.log('GenomeBrowser onSetState: ', state, state.genome_id, state.genome_ids);
@@ -989,6 +990,19 @@ define([
       }
 
       // console.log("JBROWSE LOC: ", state.hashParams.loc);
+     if (this.defaultTracks == null){
+        if (state && state.hashParams && (typeof state.hashParams.tracks != 'undefined')){
+            if (state.hashParams.tracks instanceof Array){
+                this.defaultTracks = state.hashParams.tracks.join(',');
+            }
+            else{
+                this.defaultTracks = state.hashParams.tracks;
+            }
+        }
+        else{
+         this.defaultTracks=['refseqs', 'PATRICGenes', 'RefSeqGenes'];
+        }
+     }
 
       var jbrowseConfig = {
         containerID: this.id + '_browserContainer',
@@ -1002,7 +1016,7 @@ define([
         queryParams: (state && state.hashParams) ? state.hashParams : {},
         location: (state && state.hashParams) ? state.hashParams.loc : undefined,
         // defaultTracks: ["SequenceTrack"].join(","),
-        forceTracks: (state && state.hashParams && (typeof state.hashParams.tracks != 'undefined')) ? state.hashParams.tracks instanceof Array ? state.hashParams.tracks.join(',') : state.hashParams.tracks : ['refseqs', 'PATRICGenes', 'RefSeqGenes'].join(','),
+        forceTracks: this.defaultTracks.join(','),
         highResoutionMode: 'auto',
         // alwaysOnTracks: [,"PATRICGenes"].join(","),
         initialHighlight: (state && state.hashParams) ? state.hashParams.highlight : undefined,
@@ -1038,7 +1052,6 @@ define([
       if (state && state.hashParams && state.hashParams.addStores) {
         jbrowseConfig.stores = JSON.parse(state.hashParams.addStores);
       }
-
       // console.log("jbrowseConfig", jbrowseConfig);
 
       this.set('jbrowseConfig', jbrowseConfig);

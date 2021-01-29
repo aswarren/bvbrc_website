@@ -14,6 +14,7 @@ define([
     defaultTab: 'overview',
     perspectiveLabel: 'BasePerspective Perspective',
     perspectiveIconClass: 'icon-info',
+    createHeader: true,
     onSetState: function (attr, oldState, state) {
       if (!state) {
         return;
@@ -51,34 +52,35 @@ define([
 
     postCreate: function () {
       this.inherited(arguments);
-      this.viewHeader = new ContentPane({
-        content: '',
-        'class': 'breadcrumb',
-        region: 'top'
-      });
+        this.viewHeader = new ContentPane({
+            content: '',
+            'class': 'breadcrumb',
+            region: 'top'
+        });
 
-      var headerContent = domConstruct.create('div', { 'class': 'PerspectiveHeader' });
-      domConstruct.place(headerContent, this.viewHeader.containerNode, 'last');
+        var headerContent = domConstruct.create('div', { 'class': 'PerspectiveHeader' });
+      if (this.createHeader){
+        domConstruct.place(headerContent, this.viewHeader.containerNode, 'last');
 
-      domConstruct.create('i', { 'class': 'fa PerspectiveIcon ' + this.perspectiveIconClass }, headerContent);
+        domConstruct.create('i', { 'class': 'fa PerspectiveIcon ' + this.perspectiveIconClass }, headerContent);
 
-      domConstruct.create('div', {
-        'class': 'PerspectiveType',
-        innerHTML: this.perspectiveLabel
-      }, headerContent);
+        domConstruct.create('div', {
+            'class': 'PerspectiveType',
+            innerHTML: this.perspectiveLabel
+        }, headerContent);
+      }
 
-      this.queryNode = domConstruct.create('span', { 'class': 'PerspectiveQuery' }, headerContent);
+        this.queryNode = domConstruct.create('span', { 'class': 'PerspectiveQuery' }, headerContent);
 
-      this.totalCountNode = domConstruct.create('span', {
-        'class': 'PerspectiveTotalCount',
-        innerHTML: '( loading... )'
-      }, headerContent);
-
-      this.viewer = new TabContainer({
-        region: 'center'
-      });
-
+        this.totalCountNode = domConstruct.create('span', {
+            'class': 'PerspectiveTotalCount',
+            innerHTML: '( loading... )'
+        }, headerContent);
+      
       this.addChild(this.viewHeader);
+      this.viewer = new TabContainer({
+          region: 'center'
+      });
       this.addChild(this.viewer);
 
     }
