@@ -2,7 +2,7 @@ define([
   'dojo/_base/declare', 'dojo/_base/lang',
   'dojo/dom-construct', 'dojo/request',
   './TabViewerBase', 'dijit/Dialog',
-  '../GenomeBrowser', 
+  '../GenomeBrowser',
   '../../util/PathJoin'
 ], function (
   declare, lang,
@@ -16,8 +16,8 @@ define([
     disabled: false,
     containerType: 'genome_group',
     genome_id: '',
-    //perspectiveLabel: 'Genome View',
-    //perspectiveIconClass: 'icon-selection-Genome',
+    // perspectiveLabel: 'Genome View',
+    // perspectiveIconClass: 'icon-selection-Genome',
     createHeader: false,
     apiServiceUrl: window.App.dataAPI,
 
@@ -127,7 +127,7 @@ define([
     },
 
     buildHeaderContent: function (genome) {
-      if (!genome) {
+      if (!genome || !this.createHeader) {
         return;
       }
 
@@ -151,7 +151,7 @@ define([
         var out = visibleIndexes.map(function (idx) {
           return '<a class="navigationLink" href="/view/Taxonomy/' + taxon_lineage_ids[idx] + '">' + taxon_lineage_names[idx] + '</a>';
         });
-        //this.queryNode.innerHTML = out.join(' &raquo; ') + ' &raquo; <span class="current">' + genome.genome_name + '</span>';
+        this.queryNode.innerHTML = out.join(' &raquo; ') + ' &raquo; <span class="current">' + genome.genome_name + '</span>';
       }));
     },
 
