@@ -16,8 +16,8 @@ define([
     disabled: false,
     containerType: 'genome_group',
     genome_id: '',
-    // perspectiveLabel: 'Genome View',
-    // perspectiveIconClass: 'icon-selection-Genome',
+    perspectiveLabel: 'Genome View',
+    perspectiveIconClass: 'icon-selection-Genome',
     createHeader: false,
     apiServiceUrl: window.App.dataAPI,
 
