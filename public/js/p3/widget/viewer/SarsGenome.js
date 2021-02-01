@@ -250,7 +250,7 @@ define([
         id: this.viewer.id + '_browser',
         state: lang.mixin({}, this.state),
         tooltip: 'The "Browser" tab shows genome sequence and genomic features using linear genome browser',
-        defaultTracks: ['refseqs']
+        defaultTracks: ['refseqs','VOCMarkers','RefSeqGenes','UniprotFeatures']
       });
 
 
