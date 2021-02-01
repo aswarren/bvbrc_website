@@ -18,7 +18,7 @@ define([
     genome_id: '',
     perspectiveLabel: 'Genome View',
     perspectiveIconClass: 'icon-selection-Genome',
-    createHeader: false,
+    createHeader: true,
     apiServiceUrl: window.App.dataAPI,
 
     _setGenome_idAttr: function (id) {
