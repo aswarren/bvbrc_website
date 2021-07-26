@@ -1,6 +1,6 @@
 #!/bin/sh     
 
-maxParam=""
+maxParam="dont' keep this"
 if [ -f /proc/cpuinfo ] ; then
     cpus=`grep -c "^processor[[:space:]]*:" /proc/cpuinfo`
     if [ $cpus -gt 10 ] ; then
