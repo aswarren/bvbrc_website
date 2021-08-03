@@ -7,7 +7,7 @@ define(['dojo/_base/Deferred', 'dojo/topic', 'dojo/request/xhr',
 
   var self = this;
   var TIME_OUT = 5000; // in ms
-
+  var job_callbacks={}; // key job id to callback function
   // state model of filters applied to jobs
   self.filters = {
     app: 'all',
@@ -43,7 +43,7 @@ define(['dojo/_base/Deferred', 'dojo/topic', 'dojo/request/xhr',
         Topic.publish('/JobFilter', self.filters);
         return;
       }
-
+      //check job ids as finished and remove them from callback list and call the callback
       Topic.publish('/Jobs', { status: 'updated', jobs: _DataStore.data });
     });
   }
