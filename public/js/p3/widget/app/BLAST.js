@@ -294,18 +294,11 @@ define([
       domClass.add(query('.service_error')[0], 'hidden');
       query('.reSubmitBtn').style('visibility', 'visible');
 
-
-    // need to submit and then get job id back from submission
-      def.promise.then(function (q) {
-        job_manager.setJobHook(jobid123, function() {
+        // need to submit and then get job id back from submission
+        _self.setJobHook(function() {
             _self.result.set('stVate', { query: q, resultType: resultType });
         });
-        job_manager.setJobHook
-        // log GA
-        if (window.gtag) {
-          gtag('event', 'BLAST', { event_category: 'Services', method: q.method });
-        }
-      });
+        _self.doSubmit();
 
     },
 
