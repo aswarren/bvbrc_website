@@ -242,8 +242,8 @@ define([
 
     },
 
-    doSubmit: function(){
-        return window.App.api.service('AppService.start_app2', [this.applicationName, values, start_params].then(function(results){
+    doSubmit: function(values, start_params){
+        return window.App.api.service('AppService.start_app2', [this.applicationName, values, start_params]).then(function(results){
           if(_self.lookAheadJob){
               JobManager.setJobHook(results.jobID, _self.postJobCallback);
           }
@@ -282,7 +282,7 @@ define([
         var start_params = {
           'base_url': window.App.appBaseURL
         }
-        doSubmit().then(function (results) {
+        doSubmit(values, start_params).then(function (results) {
           console.log('Job Submission Results: ', results);
 
           if (window.gtag) {

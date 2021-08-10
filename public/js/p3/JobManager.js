@@ -14,6 +14,9 @@ define(['dojo/_base/Deferred', 'dojo/topic', 'dojo/request/xhr',
     status: null
   };
 
+  self.targetJob = null;
+  self.targetJobCallback = null;
+
   // state of status (used to detect changes)
   var StatusSummary = { init: null };
 
@@ -37,6 +40,15 @@ define(['dojo/_base/Deferred', 'dojo/topic', 'dojo/request/xhr',
 
       // perform any callback action before filtering
       if (cb) cb();
+      //NEED TO FIND FINISHED JOBS
+      finished_jobs=[];
+      if (self.targetJob && self.targetJobCallback){
+        if (self.targetJob == finished_jobs){
+          self.targetJob=null;
+          self.targetJobCallback();
+        }
+      }
+      
 
       if (self.filters.app || self.filters.status) {
         Topic.publish('/Jobs', { status: 'filtered', jobs: _DataStore.data });
@@ -83,6 +95,11 @@ define(['dojo/_base/Deferred', 'dojo/topic', 'dojo/request/xhr',
 
       return change; // bool
     });
+  }
+
+  function setJobHook(jobID, callback){
+    self.targetJob = jobID;
+    self.targetJobCallback = callback;
   }
 
   function PollJobs() {

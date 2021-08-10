@@ -82,6 +82,7 @@ define([
     baseClass: 'BLAST',
     templateString: Template,
     applicationHelp: 'user_guides/services/blast.html',
+    applicationName:"Homology",
     tutorialLink: 'tutorial/blast/blast.html',
     addedGenomes: 0,
     maxGenomes: 20,
@@ -198,6 +199,7 @@ define([
       var useDatabase = !(['selGenome', 'selGroup', 'selTaxon'].indexOf(database) > -1);
       var program = this.program.get('value');
       var evalue = this.evalue.get('value');
+      var output_file = this.output_file.get('value');
       var max_hits = parseInt(this.max_hits.get('value'));
       var def = new Deferred();
       var resultType;
@@ -294,12 +296,18 @@ define([
       domClass.add(query('.service_error')[0], 'hidden');
       query('.reSubmitBtn').style('visibility', 'visible');
 
-        // need to submit and then get job id back from submission
-        _self.setJobHook(function() {
-            _self.result.set('stVate', { query: q, resultType: resultType });
-        });
-        _self.doSubmit();
-
+        if (this.validate()) {
+            var start_params = {
+            'base_url': window.App.appBaseURL
+            }
+           var values = this.getValues();
+           //set job hook before submission
+            _self.setJobHook(function() {
+                //the state set here shows up again in the BlastMemoryStore onSetState
+                _self.result.set('state', { query: q, resultType: resultType, resultPath: output_file });
+            });
+            _self.doSubmit(values, start_params);
+        }
     },
 
     resubmit: function () {

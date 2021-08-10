@@ -36,7 +36,7 @@ define([
 
       delete this._loadingDeferred;
       this._loaded = false;
-      this.loadData();
+      this.loadWorkspaceData();
       this.set('refresh');
     },
 
@@ -224,7 +224,7 @@ define([
     },
 
 
-      loadWorkspaceData:function(output_path){
+      loadWorkspaceData:function(){
         if (this._loadingDeferred) {
             return this._loadingDeferred;
         }
@@ -245,7 +245,7 @@ define([
             }), 0);
             return def.promise;
         }
-        paths=[output_path];
+        paths=[this.state.resultPath];
         WorkspaceManager.getFolderContents(this._hiddenPath, false, false, false).then(lang.hitch(this, function (paths) {
             var filtered = paths.filter(function (f) {
             // console.log("Filtering f: ", f);
