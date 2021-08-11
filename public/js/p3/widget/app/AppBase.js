@@ -243,9 +243,24 @@ define([
     },
 
     doSubmit: function(values, start_params){
+        _self = this;
+        // tack on container build ID if specified in debugging panel
+        if (window.App.containerBuildID) {
+          values.container_id = window.App.containerBuildID;
+        }
+
+        if (window.App.noJobSubmission) {
+          var dlg = new Dialog({
+            title: 'Job Submission Params: ',
+            content: '<pre>' + JSON.stringify(values, null, 4) + '</pre>'
+          });
+          dlg.startup();
+          dlg.show();
+          return;
+        }
         return window.App.api.service('AppService.start_app2', [this.applicationName, values, start_params]).then(function(results){
           if(_self.lookAheadJob){
-              JobManager.setJobHook(results.jobID, _self.postJobCallback);
+              JobManager.setJobHook(results[0].id, _self.postJobCallback);
           }
                 return results;
         });
@@ -263,26 +278,12 @@ define([
         domClass.remove(this.domNode, 'Error');
         domClass.remove(this.domNode, 'Submitted');
 
-        // tack on container build ID if specified in debugging panel
-        if (window.App.containerBuildID) {
-          values.container_id = window.App.containerBuildID;
-        }
-
-        if (window.App.noJobSubmission) {
-          var dlg = new Dialog({
-            title: 'Job Submission Params: ',
-            content: '<pre>' + JSON.stringify(values, null, 4) + '</pre>'
-          });
-          dlg.startup();
-          dlg.show();
-          return;
-        }
 
         this.submitButton.set('disabled', true);
         var start_params = {
           'base_url': window.App.appBaseURL
         }
-        doSubmit(values, start_params).then(function (results) {
+        _self.doSubmit(values, start_params).then(function (results) {
           console.log('Job Submission Results: ', results);
 
           if (window.gtag) {

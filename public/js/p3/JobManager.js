@@ -40,14 +40,6 @@ define(['dojo/_base/Deferred', 'dojo/topic', 'dojo/request/xhr',
 
       // perform any callback action before filtering
       if (cb) cb();
-      //NEED TO FIND FINISHED JOBS
-      finished_jobs=[];
-      if (self.targetJob && self.targetJobCallback){
-        if (self.targetJob == finished_jobs){
-          self.targetJob=null;
-          self.targetJobCallback();
-        }
-      }
       
 
       if (self.filters.app || self.filters.status) {
@@ -81,6 +73,18 @@ define(['dojo/_base/Deferred', 'dojo/topic', 'dojo/request/xhr',
           completed !== StatusSummary.completed ||
           failed !== StatusSummary.failed) {
         change = true;
+        if (self.targetJob && self.targetJobCallback){
+            //NEED TO FIND FINISHED JOBS
+            var prom2 = window.App.api.service('AppService.query_tasks', [self.targetJob]);
+            prom2.then(function (res) {
+                var status = res[0];
+                finished_jobs=[];
+                if (self.targetJob == finished_jobs){
+                    self.targetJob=null;
+                    self.targetJobCallback();
+                }
+            });
+        }
       }
 
       StatusSummary = {
